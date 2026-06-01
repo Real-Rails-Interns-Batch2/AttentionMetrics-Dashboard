@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "user": "Jaliha Sherin",
+    "status": "active",
+    "is_synthetic": true
+  },
+  {
+    "id": 2,
+    "user": "Error User",
+    "status": "invalid_input",
+    "is_synthetic": true
+  }
+]
