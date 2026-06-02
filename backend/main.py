@@ -4,9 +4,8 @@ import logging
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from typing import List
+from typing import List, Dict, Any
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,15 +14,26 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="POC-45 Revenue Simulator API")
 
-# Load Data
+# Load Data - സുരക്ഷിതമാക്കിയ രീതി
 def load_data():
     file_path = os.path.join(os.path.dirname(__file__), 'data.json')
-    with open(file_path, 'r') as f:
-        return json.load(f)
+    try:
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+            
+        # ഡാറ്റ ലിസ്റ്റ് ആണോ ഡിക്ഷണറി ആണോ എന്ന് പരിശോധിക്കുന്നു
+        if isinstance(data, list):
+            # ലിസ്റ്റ് ആണെങ്കിൽ പ്ലാറ്റ്‌ഫോംസ് എന്ന് കരുതി സെറ്റ് ചെയ്യുന്നു
+            return {"platforms": data, "verticals": []}
+        return data
+    except Exception as e:
+        logger.error(f"Error loading JSON: {e}")
+        return {"platforms": [], "verticals": []}
 
+# ലോഡ് ചെയ്ത ഡാറ്റ
 data = load_data()
-PLATFORMS_DATA = data["platforms"]
-VERTICAL_CPMS_DATA = data["verticals"]
+PLATFORMS_DATA = data.get("platforms", [])
+VERTICAL_CPMS_DATA = data.get("verticals", [])
 
 # CORS
 cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
@@ -31,16 +41,35 @@ app.add_middleware(CORSMiddleware, allow_origins=cors_origins, allow_credentials
 
 # Models
 class Platform(BaseModel):
-    id: str; name: str; icon: str; category: str; dau: int; session: int; adLoad: int; cpm: float; creatorSplit: int; color: str
+    id: str
+    name: str
+    icon: str
+    category: str
+    dau: int
+    session: int
+    adLoad: int
+    cpm: float
+    creatorSplit: int
+    color: str
 
 class SimulatorRequest(BaseModel):
-    platform_id: str; dau: int; session: int; ad_load: int; cpm: float
+    platform_id: str
+    dau: int
+    session: int
+    ad_load: int
+    cpm: float
 
 class SimulatorResponse(BaseModel):
-    total_hours: float; total_impressions: float; daily_revenue: float; annual_run_rate: float; creator_revenue: float; platform_net: float
+    total_hours: float
+    total_impressions: float
+    daily_revenue: float
+    annual_run_rate: float
+    creator_revenue: float
+    platform_net: float
 
 class VerticalCPM(BaseModel):
-    label: str; value: int
+    label: str
+    value: int
 
 # Routes
 @app.get("/api/platforms", response_model=List[Platform])
