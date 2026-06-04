@@ -22,6 +22,18 @@
     "cpm": 10.0,
     "creatorSplit": 50,
     "color": "#000000"
+  },
+  {
+    "id": "3",
+    "name": "Instagram",
+    "icon": "📷",
+    "category": "Social",
+    "dau": 2000,
+    "session": 30,
+    "adLoad": 8,
+    "cpm": 15.0,
+    "creatorSplit": 45,
+    "color": "#e1306c"
   }
 ]
 
