@@ -1,24 +1,27 @@
 [
   {
-    "id": 1,
-    "user": "Jaliha Sherin",
-    "status": "active",
-    "is_synthetic": true,
-    "dau": 100,
-    "session": 40,
-    "adLoad": 5,
-    "cpm": 15.0,
-    "creatorSplit": 55
+    "id": "1",
+    "name": "YouTube",
+    "icon": "📺",
+    "category": "Video",
+    "dau": 2500,
+    "session": 45,
+    "adLoad": 6,
+    "cpm": 12.0,
+    "creatorSplit": 55,
+    "color": "#ff0000"
   },
   {
-    "id": 2,
-    "user": "Error User",
-    "status": "invalid_input",
-    "is_synthetic": true,
-    "dau": 150,
-    "session": 30,
-    "adLoad": 8,
+    "id": "2",
+    "name": "TikTok",
+    "icon": "🎵",
+    "category": "Social",
+    "dau": 1500,
+    "session": 95,
+    "adLoad": 4,
     "cpm": 10.0,
-    "creatorSplit": 40
+    "creatorSplit": 50,
+    "color": "#000000"
   }
 ]
+
