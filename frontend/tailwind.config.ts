@@ -48,4 +48,4 @@ const config: Config = {
   },
   plugins: [],
 };
-export default config;     talwind.config.ts ithanu ithengne reay aka full code tharu ready akkan ullathu
+export default config;    
