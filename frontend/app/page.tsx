@@ -39,15 +39,13 @@ export default function AttentionEconomyDashboard() {
     setSimCpm(activePlatform.cpm);
   }, [activePlatform.id]);
 
-  // Derived simulator metrics
   const totalHours = (simDau * 1000000 * simSession) / 60;
   const totalImpressions = totalHours * simAdLoad;
   const simDailyRev = (totalImpressions / 1000) * simCpm;
   const simCreatorRev = simDailyRev * (activePlatform.creatorSplit / 100);
   const simPlatformNet = simDailyRev - simCreatorRev;
 
-  // Global aggregate metrics (static reference based on initial array)
-  const globalDau = PLATFORMS.reduce((acc, p) => acc + p.dau, 0) / 1000; // in Billions
+  const globalDau = PLATFORMS.reduce((acc, p) => acc + p.dau, 0) / 1000;
   const avgCpm = PLATFORMS.reduce((acc, p) => acc + p.cpm, 0) / PLATFORMS.length;
   const avgSession = PLATFORMS.reduce((acc, p) => acc + p.session, 0) / PLATFORMS.length;
   const totalRev = PLATFORMS.reduce((acc, p) => {
@@ -64,7 +62,7 @@ export default function AttentionEconomyDashboard() {
           <div className={styles.headerBrand}>
             <div className={styles.headerLogo}>⏱️</div>
             <div>
-              <div className={styles.headerTitle}>Attention Economy Revenue Simulator</div>
+              <div className={styles.headerTitle}>Infocreon: Attention Economy Revenue Simulator</div>
               <div className={styles.headerSub}>REAL RAILS INTELLIGENCE LIBRARY · POC-45</div>
             </div>
           </div>
@@ -93,7 +91,6 @@ export default function AttentionEconomyDashboard() {
             <span className={styles.tickerItem}>CPM range: $0.50 - $52 by vertical</span>
             <span className={styles.tickerDot}>•</span>
             <span className={styles.tickerItem}>Creator economy market: $250B</span>
-            {/* Duplicated for infinite scroll effect */}
             <span className={styles.tickerDot}>•</span>
             <span className={styles.tickerItem}>Global ad spend 2024: $740B</span>
             <span className={styles.tickerDot}>•</span>
@@ -140,7 +137,6 @@ export default function AttentionEconomyDashboard() {
                 const hrs = (p.dau * 1000000 * p.session) / 60;
                 const imps = hrs * p.adLoad;
                 const rev = (imps / 1000) * p.cpm;
-                // find max for scaling
                 const maxRev = Math.max(...PLATFORMS.map(px => ((px.dau * 1000000 * px.session) / 60) * px.adLoad / 1000 * px.cpm));
                 const widthPct = (rev / maxRev) * 100;
                 
@@ -152,10 +148,7 @@ export default function AttentionEconomyDashboard() {
                       <div className={styles.barRevenue}>${(rev / 1e6).toFixed(1)}M/day</div>
                     </div>
                     <div className={styles.barTrack}>
-                      <div 
-                        className={styles.barFill} 
-                        style={{ backgroundColor: p.color, "--bar-width": `${widthPct}%` } as any}
-                      ></div>
+                      <div className={styles.barFill} style={{ backgroundColor: p.color, "--bar-width": `${widthPct}%` } as any}></div>
                     </div>
                   </div>
                 );
@@ -291,7 +284,6 @@ export default function AttentionEconomyDashboard() {
               ))}
             </div>
           </div>
-
         </div>
 
         <div className={styles.rightPane}>
