@@ -3,12 +3,22 @@
     "id": 1,
     "user": "Jaliha Sherin",
     "status": "active",
-    "is_synthetic": true
+    "is_synthetic": true,
+    "dau": 100,
+    "session": 40,
+    "adLoad": 5,
+    "cpm": 15.0,
+    "creatorSplit": 55
   },
   {
     "id": 2,
     "user": "Error User",
     "status": "invalid_input",
-    "is_synthetic": true
+    "is_synthetic": true,
+    "dau": 150,
+    "session": 30,
+    "adLoad": 8,
+    "cpm": 10.0,
+    "creatorSplit": 40
   }
 ]
