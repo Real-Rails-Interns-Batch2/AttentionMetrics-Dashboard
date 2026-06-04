@@ -5,21 +5,23 @@ import styles from "./page.module.css";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-// Types
+// പുതിയ ഡാറ്റാ സ്ട്രക്ചറിന് അനുസരിച്ചുള്ള ടൈപ്പ്
 export type Platform = {
-  id: string; name: string; icon: string; category: string;
-  dau: number; session: number; adLoad: number; cpm: number;
-  creatorSplit: number; color: string;
-};
-
-const emptyPlatform: Platform = {
-  id: "", name: "Loading...", icon: "📡", category: "",
-  dau: 0, session: 0, adLoad: 0, cpm: 0, creatorSplit: 0, color: "#64748b",
+  id: number;
+  user: string;
+  status: string;
+  is_synthetic: boolean;
+  // പഴയ ഫീൽഡുകൾ നിലനിർത്തി (data.json-ൽ ഇത് ഉണ്ടെന്ന് ഉറപ്പാക്കുക)
+  dau?: number;
+  session?: number;
+  adLoad?: number;
+  cpm?: number;
+  creatorSplit?: number;
 };
 
 export default function AttentionEconomyDashboard() {
   const [platforms, setPlatforms] = useState<Platform[]>([]);
-  const [selectedId, setSelectedId] = useState<string>("");
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,10 +31,9 @@ export default function AttentionEconomyDashboard() {
   const [simAdLoad, setSimAdLoad] = useState(0);
   const [simCpm, setSimCpm] = useState(0);
   const [creatorSplitOverride, setCreatorSplitOverride] = useState(0);
-  const [revenueTarget] = useState(1000);
 
   const activePlatform = useMemo(
-    () => platforms.find((p) => p.id === selectedId) || platforms[0] || emptyPlatform,
+    () => platforms.find((p) => p.id === selectedId) || platforms[0],
     [platforms, selectedId]
   );
 
@@ -44,7 +45,7 @@ export default function AttentionEconomyDashboard() {
         const data = await res.json();
         setPlatforms(data);
         if (data.length > 0) setSelectedId(data[0].id);
-      } catch {
+      } catch (err) {
         setError("Error loading data.");
       } finally {
         setIsLoading(false);
@@ -54,12 +55,12 @@ export default function AttentionEconomyDashboard() {
   }, []);
 
   useEffect(() => {
-    if (activePlatform?.id) {
-      setSimDau(activePlatform.dau);
-      setSimSession(activePlatform.session);
-      setSimAdLoad(activePlatform.adLoad);
-      setSimCpm(activePlatform.cpm);
-      setCreatorSplitOverride(activePlatform.creatorSplit);
+    if (activePlatform) {
+      setSimDau(activePlatform.dau || 100);
+      setSimSession(activePlatform.session || 30);
+      setSimAdLoad(activePlatform.adLoad || 5);
+      setSimCpm(activePlatform.cpm || 10);
+      setCreatorSplitOverride(activePlatform.creatorSplit || 50);
     }
   }, [activePlatform]);
 
@@ -72,10 +73,8 @@ export default function AttentionEconomyDashboard() {
       simDailyRev,
       simCreatorRev,
       simPlatformNet: simDailyRev - simCreatorRev,
-      revenuePerAd: simAdLoad > 0 ? simDailyRev / simAdLoad : 0,
-      timeToRevenueDays: simDailyRev > 0 ? Math.max(1, (revenueTarget * 1_000_000) / simDailyRev) : 0,
     };
-  }, [simDau, simSession, simAdLoad, simCpm, creatorSplitOverride, revenueTarget]);
+  }, [simDau, simSession, simAdLoad, simCpm, creatorSplitOverride]);
 
   if (isLoading) return <div className={styles.center}>Loading dashboard...</div>;
   if (error) return <div className={styles.center}>{error}</div>;
@@ -85,9 +84,11 @@ export default function AttentionEconomyDashboard() {
       <h1>Attention Economy Simulator</h1>
 
       <section className={styles.controls}>
-        <label>Select Platform:</label>
-        <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
-          {platforms.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+        <label>Select User/Platform:</label>
+        <select value={selectedId || ""} onChange={(e) => setSelectedId(Number(e.target.value))}>
+          {platforms.map((p) => (
+            <option key={p.id} value={p.id}>{p.user}</option>
+          ))}
         </select>
       </section>
 
