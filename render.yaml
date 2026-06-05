@@ -1,28 +1,26 @@
 services:
-  # Backend Service (FastAPI)
   - type: web
     name: attention-metrics-api
     runtime: python
     plan: free
     rootDir: backend
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
-        value: "3.10"
+        value: "3.11"
       - key: CORS_ORIGINS
-        sync: false
+        value: https://attention-metrics-web.onrender.com
 
-  # Frontend Service (Next.js)
   - type: web
     name: attention-metrics-web
     runtime: node
     plan: free
     rootDir: frontend
-    buildCommand: "npm install && npm run build"
-    startCommand: "npm run start"
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
     envVars:
       - key: NODE_VERSION
         value: "20"
       - key: NEXT_PUBLIC_API_URL
-        sync: false
+        value: https://attention-metrics-api.onrender.com
